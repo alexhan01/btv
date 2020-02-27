@@ -1,1 +1,1 @@
-# btv
+# Interactive Backtrader Visualization Tool

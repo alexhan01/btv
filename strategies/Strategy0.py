@@ -1,12 +1,8 @@
-import datetime  # For datetime objects
-import os.path  # To manage paths
-import sys  # To find out the script name (in argv[0])
-
 # Import the backtrader platform
 import backtrader as bt
 
 # Create a Strategy
-class TestStrategy(bt.Strategy):
+class Strategy(bt.Strategy):
     params = (
         ('maperiod', 15),
     )

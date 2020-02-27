@@ -7,16 +7,31 @@ import sys  # To find out the script name (in argv[0])
 
 # Import the backtrader platform
 import backtrader as bt
-# Import Strategies
-from strategies.Strategy0 import TestStrategy
+from pydoc import locate
 
+def RepresentsInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
 
 if __name__ == '__main__':
     # Create a cerebro entity
     cerebro = bt.Cerebro()
 
     # Add a strategy
-    cerebro.addstrategy(TestStrategy)
+    #cerebro.addstrategy(TestStrategy)
+    while True:
+        k = input()
+        if (RepresentsInt(k)) :
+            target = "strategies.Strategy"+k+".Strategy"
+            strategy = locate(target)
+            cerebro.addstrategy(strategy)
+        else :
+            break
+        
+
 
     # Datas are in a subfolder of the samples. Need to find where the script is
     # because it could have been called from anywhere

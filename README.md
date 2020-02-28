@@ -1,1 +1,1 @@
-# Interactive Backtrader Visualization Tool
+# Interactive Backtesting Visualizer

@@ -9,28 +9,40 @@ import sys  # To find out the script name (in argv[0])
 import backtrader as bt
 from pydoc import locate
 
+from strategies.Strategy0 import Strategy
+
+
 def RepresentsInt(s):
-    try: 
+    try:
         int(s)
         return True
     except ValueError:
         return False
 
 if __name__ == '__main__':
+    import os
+    this_dir = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(this_dir, "data.txt")
+
+    f = open(file_path, "w")
     # Create a cerebro entity
     cerebro = bt.Cerebro()
+    cerebro.addstrategy(Strategy)
+
+    cerebro.addwriter(bt.WriterFile, out=f, csv=True, rounding=2, close_out = True)
+
 
     # Add a strategy
     #cerebro.addstrategy(TestStrategy)
-    while True:
-        k = input()
-        if (RepresentsInt(k)) :
-            target = "strategies.Strategy"+k+".Strategy"
-            strategy = locate(target)
-            cerebro.addstrategy(strategy)
-        else :
-            break
-        
+    # while True:
+    #     k = input()
+    #     if (RepresentsInt(k)) :
+    #         target = "strategies.Strategy"+k+".Strategy"
+    #         strategy = locate(target)
+    #         cerebro.addstrategy(strategy)
+    #     else :
+    #         break
+
 
 
     # Datas are in a subfolder of the samples. Need to find where the script is
@@ -64,10 +76,12 @@ if __name__ == '__main__':
     print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
     # Run over everything
-    cerebro.run()
+
+    result = cerebro.run()
 
     # Print out the final result
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
     # Plot the result
-    cerebro.plot()
+    #cerebro.plot()
+    f.close();

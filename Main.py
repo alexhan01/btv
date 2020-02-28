@@ -7,11 +7,11 @@ import sys  # To find out the script name (in argv[0])
 
 # Import the backtrader platform
 import backtrader as bt
-from pydoc import locate
 
+import os
 from strategies.Strategy0 import Strategy
 
-
+# Ensures the input to strategies chosen to be a number
 def RepresentsInt(s):
     try:
         int(s)
@@ -20,15 +20,16 @@ def RepresentsInt(s):
         return False
 
 if __name__ == '__main__':
-    import os
+    # Needed to force conda to write to relative path for some reason
     this_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(this_dir, "data.txt")
-
     f = open(file_path, "w")
+
     # Create a cerebro entity
     cerebro = bt.Cerebro()
     cerebro.addstrategy(Strategy)
 
+    # Makes cerebro write to file instead of console
     cerebro.addwriter(bt.WriterFile, out=f, csv=True, rounding=2, close_out = True)
 
 

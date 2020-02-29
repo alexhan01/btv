@@ -7,19 +7,18 @@ import sys  # To find out the script name (in argv[0])
 
 # Import the backtrader platform
 import backtrader as bt
-
+from pydoc import locate
 import os
-from strategies.Strategy0 import Strategy
 
 # Ensures the input to strategies chosen to be a number
-def RepresentsInt(s):
+def represents_int(s):
     try:
         int(s)
         return True
     except ValueError:
         return False
 
-if __name__ == '__main__':
+def run_cerebro(Strategy):
     # Needed to force conda to write to relative path for some reason
     this_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(this_dir, "data.txt")
@@ -86,3 +85,15 @@ if __name__ == '__main__':
     # Plot the result
     #cerebro.plot()
     f.close();
+
+
+if __name__ == '__main__':
+    # Add a strategy
+    while True:
+        k = input()
+        if (represents_int(k)) :
+            target = "strategies.Strategy"+k+".Strategy"
+            strategy = locate(target)
+            run_cerebro(strategy)
+        else :
+            break

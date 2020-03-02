@@ -6,7 +6,7 @@ const paramSchema = new Schema({
     symbol: { type: String, required: true },
     starttime: { type: Date, required: true },
     endtime: { type: Date, required: true },
-    strategy: { type: String, required: false},
+    strategy: { type: String, required: true},
 }, {
     timestamps: true,
 });

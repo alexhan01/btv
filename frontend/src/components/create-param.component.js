@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios';
 
 export default class CreateParam extends Component {
     constructor(props) {
@@ -8,21 +11,24 @@ export default class CreateParam extends Component {
         this.onChangeStarttime = this.onChangeStarttime.bind(this);
         this.onChangeEndtime = this.onChangeEndtime.bind(this);
         this.onChangeStrategy = this.onChangeStrategy.bind(this);
-        this.onSubmit = this.onChangeSymbol.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = { 
             symbol: '',
             starttime: new Date(),
             endtime: new Date(),
             strategy: '',
-            symbols: []
+            symbols: [],
+            los: []
         }
     }
 
     componentDidMount() {
         this.setState({
             symbols:['AAPL', 'AMZN', 'TSLA'],
-            symbol: 'AAPL'
+            symbol: 'AAPL',
+            los: ['Strategy1', 'StrategyMR', 'StrategyPT'],
+            strategy: 'None'
         })
     }
 
@@ -62,6 +68,9 @@ export default class CreateParam extends Component {
 
         console.log(param);
 
+        axios.post('http://localhost:5000/param/add/', param)
+            .then(res => console.log(res.data));
+
         window.location = '/';
     }
 
@@ -87,6 +96,45 @@ export default class CreateParam extends Component {
                         })
                     }
                 </select>
+            </div>
+            <div className="form-group">
+                <label>Start Time:</label>
+                <div>
+                    <DatePicker
+                        selected={this.state.starttime}
+                        onChange={this.onChangeStarttime}
+                    />
+                </div>
+            </div>
+            <div className="form-group">
+                <label>End Time:</label>
+                <div>
+                    <DatePicker
+                        selected={this.state.endtime}
+                        onChange={this.onChangeEndtime}
+                    />
+                </div>
+            </div>
+            <div className="form-group">
+                <label>Strategy:</label>
+                <select ref="userInput"
+                   className="form-control"
+                   value={this.state.strategy}
+                   onChange={this.onChangeStrategy} 
+                >
+                {
+                    this.state.los.map(function(strategy) {
+                        return <option
+                            key={strategy}
+                            value={strategy}>
+                                {strategy}
+                        </option>;
+                    })
+                }
+                </select>
+            </div>
+            <div className="form-group">
+                <input type="submit" value="Run Backtest" className="btn btn-primary" />
             </div>
         </form>
         </div>

@@ -4,11 +4,13 @@ from __future__ import (absolute_import, division, print_function,
 import datetime  # For datetime objects
 import os.path  # To manage paths
 import sys  # To find out the script name (in argv[0])
+import config
 
 # Import the backtrader platform
 import backtrader as bt
 from pydoc import locate
 import os
+
 
 # Ensures the input to strategies chosen to be a number
 def represents_int(s):
@@ -18,10 +20,12 @@ def represents_int(s):
     except ValueError:
         return False
 
-def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, start_day=1, end_year=2000, end_month=12, end_day=31):
+
+def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, start_day=1, end_year=2000, end_month=12,
+                end_day=31):
     # Needed to force conda to write to relative path for some reason
     this_dir = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(this_dir+"\\dataoutput", file_name + ".txt")
+    file_path = os.path.join(this_dir + "\\dataoutput", file_name + ".txt")
     f = open(file_path, "w")
 
     # Create a cerebro entity
@@ -29,7 +33,7 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     cerebro.addstrategy(Strategy)
 
     # Makes cerebro write to file instead of console
-    cerebro.addwriter(bt.WriterFile, out=f, csv=True, rounding=2, close_out = True)
+    cerebro.addwriter(bt.WriterFile, out=f, csv=True, rounding=2, close_out=True)
 
     # Datas are in a subfolder of the samples. Need to find where the script is
     # because it could have been called from anywhere
@@ -69,7 +73,7 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
     # Plot the result
-    #cerebro.plot()
+    # cerebro.plot()
     f.close();
 
 
@@ -80,9 +84,10 @@ if __name__ == '__main__':
     # EFFECTS : If not an integer, ends.  Otherwise, creates a data output correlated to the strategy
     while True:
         k = input()
-        if (represents_int(k)) :
-            target = "strategies.Strategy"+k+".Strategy"
+        if represents_int(k):
+            target = "strategies.Strategy" + k + ".Strategy"
             strategy = locate(target)
-            run_cerebro(strategy, file_name="strategy"+k)
-        else :
+            run_cerebro(strategy, file_name="strategy" + k)
+
+        else:
             break

@@ -1,1 +1,1 @@
-quandlapi = "test"
+quandlapi = "test2"

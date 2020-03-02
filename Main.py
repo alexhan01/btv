@@ -9,6 +9,10 @@ import sys  # To find out the script name (in argv[0])
 import backtrader as bt
 from pydoc import locate
 import os
+import config
+import yfinance as yf
+
+
 
 
 # Ensures the input to strategies chosen to be a number
@@ -21,7 +25,7 @@ def represents_int(s):
 
 
 def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, start_day=1, end_year=2000, end_month=12,
-                end_day=31):
+                end_day=31, cash=1000):
     # Needed to force conda to write to relative path for some reason
     this_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(this_dir + "\\dataoutput", file_name + ".txt")
@@ -53,7 +57,7 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     cerebro.adddata(data)
 
     # Set our desired cash start
-    cerebro.broker.setcash(1000.0)
+    cerebro.broker.setcash(cash)
 
     # Add a FixedSize sizer according to the stake
     cerebro.addsizer(bt.sizers.FixedSize, stake=10)
@@ -81,12 +85,17 @@ if __name__ == '__main__':
     # REQUIRES : Integer correlated to a strategy, or a non integer
     # MODIFIES : dataoutput directory
     # EFFECTS : If not an integer, ends.  Otherwise, creates a data output correlated to the strategy
-    while True:
-        k = input()
-        if represents_int(k):
-            target = "strategies.Strategy" + k + ".Strategy"
-            strategy = locate(target)
-            run_cerebro(strategy, file_name="strategy" + k)
-
-        else:
-            break
+    # while True:
+    #     k = input()
+    #     if represents_int(k):
+    #         target = "strategies.Strategy" + k + ".Strategy"
+    #         strategy = locate(target)
+    #         run_cerebro(strategy, file_name="strategy" + k)
+    #
+    #     else:
+    #         break
+    msft = yf.Ticker("MSFT")
+    msft.info
+    msft.history(period="max")
+    print(msft)
+    #https://aroussi.com/post/python-yahoo-finance

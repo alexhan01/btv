@@ -18,10 +18,10 @@ def represents_int(s):
     except ValueError:
         return False
 
-def run_cerebro(Strategy):
+def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, start_day=1, end_year=2000, end_month=12, end_day=31):
     # Needed to force conda to write to relative path for some reason
     this_dir = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(this_dir, "data.txt")
+    file_path = os.path.join(this_dir+"\\dataoutput", file_name + ".txt")
     f = open(file_path, "w")
 
     # Create a cerebro entity
@@ -30,20 +30,6 @@ def run_cerebro(Strategy):
 
     # Makes cerebro write to file instead of console
     cerebro.addwriter(bt.WriterFile, out=f, csv=True, rounding=2, close_out = True)
-
-
-    # Add a strategy
-    #cerebro.addstrategy(TestStrategy)
-    # while True:
-    #     k = input()
-    #     if (RepresentsInt(k)) :
-    #         target = "strategies.Strategy"+k+".Strategy"
-    #         strategy = locate(target)
-    #         cerebro.addstrategy(strategy)
-    #     else :
-    #         break
-
-
 
     # Datas are in a subfolder of the samples. Need to find where the script is
     # because it could have been called from anywhere
@@ -54,9 +40,9 @@ def run_cerebro(Strategy):
     data = bt.feeds.YahooFinanceCSVData(
         dataname=datapath,
         # Do not pass values before this date
-        fromdate=datetime.datetime(1999, 1, 1),
+        fromdate=datetime.datetime(start_year, start_month, start_day),
         # Do not pass values before this date
-        todate=datetime.datetime(2000, 12, 31),
+        todate=datetime.datetime(end_year, end_month, end_day),
         # Do not pass values after this date
         reverse=False)
 
@@ -89,11 +75,14 @@ def run_cerebro(Strategy):
 
 if __name__ == '__main__':
     # Add a strategy
+    # REQUIRES : Integer correlated to a strategy, or a non integer
+    # MODIFIES : dataoutput directory
+    # EFFECTS : If not an integer, ends.  Otherwise, creates a data output correlated to the strategy
     while True:
         k = input()
         if (represents_int(k)) :
             target = "strategies.Strategy"+k+".Strategy"
             strategy = locate(target)
-            run_cerebro(strategy)
+            run_cerebro(strategy, file_name="strategy"+k)
         else :
             break

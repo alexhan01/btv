@@ -13,11 +13,11 @@ function App() {
   return (
     <Router>
       <div className="container">
-      <Navbar />
-      <br/>
-      <Route path="/" exact component={ParamList} />
-      <Route path="/edit/:id" component={EditParam} />
-      <Route path="/create" component={CreateParam} />        
+        <Navbar />
+        <br/>
+        <Route path="/" exact component={ParamList} />
+        <Route path="/edit/:id" component={EditParam} />
+        <Route path="/create" component={CreateParam} />        
       </div>
     </Router>
   );

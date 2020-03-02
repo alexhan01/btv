@@ -11,7 +11,7 @@ export default class CreateParam extends Component {
         this.onChangeStarttime = this.onChangeStarttime.bind(this);
         this.onChangeEndtime = this.onChangeEndtime.bind(this);
         this.onChangeStrategy = this.onChangeStrategy.bind(this);
-        this.onSubmit = this.onChangeSymbol.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = { 
             symbol: '',
@@ -68,11 +68,8 @@ export default class CreateParam extends Component {
 
         console.log(param);
 
-        axios({
-            method: 'post',
-            url: '/add',
-            data: param
-        });
+        axios.post('http://localhost:5000/param/add/', param)
+            .then(res => console.log(res.data));
 
         window.location = '/';
     }

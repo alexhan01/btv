@@ -7,6 +7,7 @@ const paramSchema = new Schema({
     starttime: { type: Date, required: true },
     endtime: { type: Date, required: true },
     strategy: { type: String, required: true},
+    cash: { type: Number, required: true},
 }, {
     timestamps: true,
 });

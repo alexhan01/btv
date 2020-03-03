@@ -12,12 +12,14 @@ router.route('/add').post((req, res) => {
     const starttime = Date.parse(req.body.starttime);
     const endtime = Date.parse(req.body.endtime);
     const strategy = req.body.strategy;
+    const cash = req.body.cash;
 
     const newParam = new Param({
         symbol,
         starttime,
         endtime,
         strategy,
+        cash,
     });
 
     newParam.save()
@@ -44,6 +46,7 @@ router.route('/update/:id').post((req, res) => {
       param.starttime = Date.parse(req.body.starttime);
       param.endtime = Date.parse(req.body.endtime);
       param.strategy = req.body.strategy;
+      param.cash = req.body.cash;
 
       param.save()
         .then(() => res.json('Param updated!'))

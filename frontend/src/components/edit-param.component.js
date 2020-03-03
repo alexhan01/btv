@@ -11,6 +11,7 @@ export default class EditParam extends Component {
         this.onChangeStarttime = this.onChangeStarttime.bind(this);
         this.onChangeEndtime = this.onChangeEndtime.bind(this);
         this.onChangeStrategy = this.onChangeStrategy.bind(this);
+        this.onChangeCash = this.onChangeCash.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = { 
@@ -18,6 +19,7 @@ export default class EditParam extends Component {
             starttime: new Date(),
             endtime: new Date(),
             strategy: '',
+            cash: 0,
             symbols: [],
             los: []
         }
@@ -30,7 +32,8 @@ export default class EditParam extends Component {
                     symbol: response.data.symbol,
                     starttime: new Date(response.data.starttime),
                     endtime: new Date(response.data.endtime),
-                    strategy: response.data.strategy
+                    strategy: response.data.strategy,
+                    cash: response.data.cash
                 })
             })
             .catch(function (error) {
@@ -68,6 +71,12 @@ export default class EditParam extends Component {
         })
     }
 
+    onChangeCash(e) {
+        this.setState({
+            cash: e.target.value
+        })
+    }
+
     onSubmit(e) {
         e.preventDefault();
 
@@ -75,7 +84,8 @@ export default class EditParam extends Component {
             symbol: this.state.symbol,
             starttime: this.state.starttime,
             endtime: this.state.endtime,
-            strategy: this.state.strategy
+            strategy: this.state.strategy,
+            cash: this.state.cash
         }
 
         console.log(param);
@@ -144,6 +154,14 @@ export default class EditParam extends Component {
                     })
                 }
                 </select>
+            </div>
+            <div className="form-group">
+                <label>Cash (in USD): </label>
+                <input
+                    type="text"
+                    className="form-control"
+                    value={this.state.cash}
+                    onChange={this.onChangeCash}/>
             </div>
             <div className="form-group">
                 <input type="submit" value="Run Backtest" className="btn btn-primary" />

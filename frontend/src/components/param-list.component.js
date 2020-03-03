@@ -8,6 +8,7 @@ const Param = props => (
         <td>{props.param.starttime.substring(0,10)}</td>
         <td>{props.param.endtime.substring(0,10)}</td>
         <td>{props.param.strategy}</td>
+        <td>{props.param.cash}</td>
         <td>
             <Link to={"/edit/"+props.param._id}>edit</Link> | <a href='#' onClick={() => { props.deleteParam(props.param._id) }}> delete</a>
         </td>
@@ -56,6 +57,7 @@ export default class ParamList extends Component {
                         <th>Start Time</th>
                         <th>End Time</th>
                         <th>Strategy</th>
+                        <th>Cash</th>
                     </thead>
                     <tbody>
                         { this.paramList() }

@@ -11,6 +11,7 @@ export default class CreateParam extends Component {
         this.onChangeStarttime = this.onChangeStarttime.bind(this);
         this.onChangeEndtime = this.onChangeEndtime.bind(this);
         this.onChangeStrategy = this.onChangeStrategy.bind(this);
+        this.onChangeCash = this.onChangeCash.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = { 
@@ -18,6 +19,7 @@ export default class CreateParam extends Component {
             starttime: new Date(),
             endtime: new Date(),
             strategy: '',
+            cash: 0,
             symbols: [],
             los: []
         }
@@ -56,6 +58,12 @@ export default class CreateParam extends Component {
         })
     }
 
+    onChangeCash(e) {
+        this.setState({
+            cash: e.target.value
+        })
+    }
+
     onSubmit(e) {
         e.preventDefault();
 
@@ -63,7 +71,8 @@ export default class CreateParam extends Component {
             symbol: this.state.symbol,
             starttime: this.state.starttime,
             endtime: this.state.endtime,
-            strategy: this.state.strategy
+            strategy: this.state.strategy,
+            cash: this.state.cash
         }
 
         console.log(param);
@@ -132,6 +141,14 @@ export default class CreateParam extends Component {
                     })
                 }
                 </select>
+            </div>
+            <div className="form-group">
+                <label>Cash (in USD): </label>
+                <input
+                    type="text"
+                    className="form-control"
+                    value={this.state.cash}
+                    onChange={this.onChangeCash}/>
             </div>
             <div className="form-group">
                 <input type="submit" value="Run Backtest" className="btn btn-primary" />

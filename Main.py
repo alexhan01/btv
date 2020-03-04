@@ -11,7 +11,7 @@ from pydoc import locate
 import os
 import config
 import yfinance as yf
-import pandas
+from pandas_datareader import data as pdr
 
 
 
@@ -45,14 +45,16 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     datapath = os.path.join(modpath, 'orcl-1995-2014.txt')
 
     # Create a Data Feed
-    data = bt.feeds.YahooFinanceCSVData(
-        dataname=datapath,
-        # Do not pass values before this date
-        fromdate=datetime.datetime(start_year, start_month, start_day),
-        # Do not pass values before this date
-        todate=datetime.datetime(end_year, end_month, end_day),
-        # Do not pass values after this date
-        reverse=False)
+    # data = bt.feeds.YahooFinanceCSVData(
+    #     dataname=datapath,
+    #     # Do not pass values before this date
+    #     fromdate=datetime.datetime(start_year, start_month, start_day),
+    #     # Do not pass values before this date
+    #     todate=datetime.datetime(end_year, end_month, end_day),
+    #     # Do not pass values after this date
+    #     reverse=False)
+    data = bt.feeds.yf.download("SPY AAPL", start="2017-01-01", end="2017-04-30",
+                   group_by="ticker")
 
     # Add the Data Feed to Cerebro
     cerebro.adddata(data)
@@ -99,15 +101,19 @@ if __name__ == '__main__':
     this_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(this_dir , "temp" + ".txt")
     f = open(file_path, "w")
-    a = yf.download("SPY AAPL", start="2017-01-01", end="2017-04-30",
-                   group_by="ticker")
-    print(type(a))
-    print(a.dtypes)
-    for tuple in a.items():
-        for series in tuple:
-            for data in series:
-                print(type(data))
-                f.write("\n"+str(data))
+    data = pdr.get_data_yahoo("SPY", start="2017-01-01", end="2017-04-30")
+
+    print(type(data))
+    f.write(data.to_string())
+    # for k in range(len(data.Open)):
+    #     f.write("\nHigh " + str(data.High.get(k)))
+
+    # print(a.dtypes)
+    # for series in a.items():
+    #     for tuple in series:
+    #         for data in tuple:
+    #             f.write("\n"+str(data))
+
 
 
     f.close()

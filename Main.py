@@ -11,6 +11,7 @@ from pydoc import locate
 import os
 import config
 import yfinance as yf
+import pandas
 
 
 
@@ -94,8 +95,20 @@ if __name__ == '__main__':
     #
     #     else:
     #         break
-    msft = yf.Ticker("MSFT")
-    msft.info
-    msft.history(period="max")
-    print(msft)
-    #https://aroussi.com/post/python-yahoo-finance
+    # Needed to force conda to write to relative path for some reason
+    this_dir = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(this_dir , "temp" + ".txt")
+    f = open(file_path, "w")
+    a = yf.download("SPY AAPL", start="2017-01-01", end="2017-04-30",
+                   group_by="ticker")
+    print(type(a))
+    print(a.dtypes)
+    for tuple in a.items():
+        for series in tuple:
+            for data in series:
+                print(type(data))
+                f.write("\n"+str(data))
+
+
+    f.close()
+    # https://aroussi.com/post/python-yahoo-finance

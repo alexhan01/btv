@@ -13,7 +13,7 @@ import config
 import yfinance as yf
 from pandas_datareader import data as pdr
 
-
+import strategies.Strategy0 as strat
 
 
 # Ensures the input to strategies chosen to be a number
@@ -42,7 +42,7 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     # Datas are in a subfolder of the samples. Need to find where the script is
     # because it could have been called from anywhere
     modpath = os.path.dirname(os.path.abspath(sys.argv[0]))
-    datapath = os.path.join(modpath, 'orcl-1995-2014.txt')
+    datapath = os.path.join(modpath, 'temp.txt')
 
     # Create a Data Feed
     # data = bt.feeds.YahooFinanceCSVData(
@@ -53,9 +53,8 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     #     todate=datetime.datetime(end_year, end_month, end_day),
     #     # Do not pass values after this date
     #     reverse=False)
-    data = bt.feeds.yf.download("SPY AAPL", start="2017-01-01", end="2017-04-30",
-                   group_by="ticker")
-
+    dataframe = pdr.get_data_yahoo("SPY", start="2000-01-01", end="2017-12-31")
+    data = bt.feeds.PandasData(dataname=dataframe)
     # Add the Data Feed to Cerebro
     cerebro.adddata(data)
 
@@ -79,7 +78,7 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
     # Plot the result
-    # cerebro.plot()
+    cerebro.plot()
     f.close();
 
 
@@ -101,20 +100,11 @@ if __name__ == '__main__':
     this_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(this_dir , "temp" + ".txt")
     f = open(file_path, "w")
-    data = pdr.get_data_yahoo("SPY", start="2017-01-01", end="2017-04-30")
-
-    print(type(data))
-    f.write(data.to_string())
-    # for k in range(len(data.Open)):
-    #     f.write("\nHigh " + str(data.High.get(k)))
-
-    # print(a.dtypes)
-    # for series in a.items():
-    #     for tuple in series:
-    #         for data in tuple:
-    #             f.write("\n"+str(data))
-
-
+    # data = pdr.get_data_yahoo("SPY", start="2000-01-01", end="2017-12-31")
+    #
+    # print(type(data))
+    # f.write(data.to_string())
+    run_cerebro( strat.Strategy, file_name="strategy")
 
     f.close()
     # https://aroussi.com/post/python-yahoo-finance

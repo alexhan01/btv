@@ -13,7 +13,7 @@ import config
 import yfinance as yf
 from pandas_datareader import data as pdr
 
-import strategies.Strategy0 as strat
+import strategies.Strategy1 as strat
 
 
 # Ensures the input to strategies chosen to be a number
@@ -26,7 +26,7 @@ def represents_int(s):
 
 
 def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, start_day=1, end_year=2000, end_month=12,
-                end_day=31, cash=1000):
+                end_day=31, cash=10000, symbol = "SPY"):
     # Needed to force conda to write to relative path for some reason
     this_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(this_dir + "\\dataoutput", file_name + ".txt")
@@ -39,21 +39,11 @@ def run_cerebro(Strategy, file_name="data", start_year=1999, start_month=1, star
     # Makes cerebro write to file instead of console
     cerebro.addwriter(bt.WriterFile, out=f, csv=True, rounding=2, close_out=True)
 
-    # Datas are in a subfolder of the samples. Need to find where the script is
-    # because it could have been called from anywhere
-    modpath = os.path.dirname(os.path.abspath(sys.argv[0]))
-    datapath = os.path.join(modpath, 'temp.txt')
+    # Uses yfinance to get data
+    start = str(start_year)+"-"+str(start_month)+"-"+str(start_day)
+    end = str(end_year)+"-"+str(end_month)+"-"+str(end_day)
+    dataframe = pdr.get_data_yahoo(symbol, start=start, end=end)
 
-    # Create a Data Feed
-    # data = bt.feeds.YahooFinanceCSVData(
-    #     dataname=datapath,
-    #     # Do not pass values before this date
-    #     fromdate=datetime.datetime(start_year, start_month, start_day),
-    #     # Do not pass values before this date
-    #     todate=datetime.datetime(end_year, end_month, end_day),
-    #     # Do not pass values after this date
-    #     reverse=False)
-    dataframe = pdr.get_data_yahoo("SPY", start="2000-01-01", end="2017-12-31")
     data = bt.feeds.PandasData(dataname=dataframe)
     # Add the Data Feed to Cerebro
     cerebro.adddata(data)
@@ -87,24 +77,14 @@ if __name__ == '__main__':
     # REQUIRES : Integer correlated to a strategy, or a non integer
     # MODIFIES : dataoutput directory
     # EFFECTS : If not an integer, ends.  Otherwise, creates a data output correlated to the strategy
-    # while True:
-    #     k = input()
-    #     if represents_int(k):
-    #         target = "strategies.Strategy" + k + ".Strategy"
-    #         strategy = locate(target)
-    #         run_cerebro(strategy, file_name="strategy" + k)
-    #
-    #     else:
-    #         break
-    # Needed to force conda to write to relative path for some reason
-    this_dir = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(this_dir , "temp" + ".txt")
-    f = open(file_path, "w")
-    # data = pdr.get_data_yahoo("SPY", start="2000-01-01", end="2017-12-31")
-    #
-    # print(type(data))
-    # f.write(data.to_string())
-    run_cerebro( strat.Strategy, file_name="strategy")
+    while True:
+        k = input()
+        if represents_int(k):
+            target = "strategies.Strategy" + k + ".Strategy"
+            strategy = locate(target)
+            run_cerebro(strategy, file_name="strategy" + k)
 
-    f.close()
+        else:
+            break
+
     # https://aroussi.com/post/python-yahoo-finance
